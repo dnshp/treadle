@@ -1,0 +1,18 @@
+load samples/SignedAdder.fir
+record-vcd SignedAdder.vcd
+poke io_in0 1
+poke io_in1 2
+step 1
+poke io_in0 2
+poke io_in1 3
+step 1
+poke io_in0 3
+poke io_in1 4
+step 1
+poke io_in0 4
+poke io_in1 5
+step 1
+poke io_in0 5
+poke io_in1 6
+step 1
+record-vcd done

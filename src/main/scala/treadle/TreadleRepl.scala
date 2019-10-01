@@ -11,7 +11,7 @@ import firrtl.options.{OptionsException, StageOptions, StageUtils, TargetDirAnno
 import firrtl.stage.{FirrtlCircuitAnnotation, FirrtlSourceAnnotation, OutputFileAnnotation}
 import org.json4s.native.JsonMethods._
 import treadle.chronometry.UTC
-import treadle.executable.{ExecutionEngine, Symbol, SymbolTable, TreadleException, WaveformValues}
+import treadle.executable.{ExecutionEngine, Symbol, SymbolTable, TreadleException, WaveformValues, ActivityFactorCollector}
 import treadle.repl._
 import treadle.stage.TreadleTesterPhase
 import treadle.vcd.VCD
@@ -1333,6 +1333,29 @@ class TreadleRepl(initialAnnotations: AnnotationSeq) {
           }
           done = true
         }
+      },
+      new Command("setFreq") {
+        def usage: (String, String) = ("setFreq [freq]", "set operating frequency (used for dynamic power estimation)")
+        def run(args: Array[String]): Unit = {
+          if (args.length < 1) {
+            console.println("setFreq requires at least one arg. Please specify a frequency.")
+          } else {
+            val freq = args(0)
+            console.println(s"setFreq is not yet implemented. Frequency = $freq.")
+          }
+        }
+      },
+      new Command ("dynPwrStart") {
+        def usage: (String, String) = ("dynPwrStart", "start recording dynamic power consumption data")
+        def run(args: Array[String]): Unit = {
+          console.println(s"dynPwrStart is not yet implemented.")
+        }
+      },
+      new Command ("dynPwrStop") {
+        def usage: (String, String) = ("dynPwrStop", "stop recording dynamic power consumption data")
+        def run(args: Array[String]): Unit = {
+          console.println(s"dynPwrStop is not yet implemented.")
+        }
       }
     )
     val commandMap: Map[String, Command] = commands.map(command => command.name -> command).toMap
@@ -1496,6 +1519,8 @@ object TreadleRepl {
 
   def main(args: Array[String]): Unit = {
     try {
+      val activityFactorCollector = new ActivityFactorCollector
+      //(new TreadleReplStage).execute(args, Seq(DataStorePlugInAnnotation("ActivityFactorCollector", activityFactorCollector.getPlugin)))
       (new TreadleReplStage).execute(args, Seq.empty)
     } catch {
       case a: OptionsException =>
