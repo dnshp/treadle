@@ -67,7 +67,7 @@ class DataStoreSpec extends FreeSpec with Matchers {
 
       val dataCollector = new DataCollector
       val annos = Seq(
-        DataStorePlugInAnnotation("DataCollector", dataCollector.getPlugin)
+        DataStorePlugInAnnotation("DataCollector", dataCollector.getPlugin),
       )
       val tester = TreadleTester(annos :+ FirrtlSourceAnnotation(input))
 

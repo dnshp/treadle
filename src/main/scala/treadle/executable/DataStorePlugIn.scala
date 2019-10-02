@@ -94,30 +94,3 @@ class VcdHook(val executionEngine: ExecutionEngine, val vcd: VCD) extends DataSt
   }
 }
 
-case class ActivityFactor(transitionCount: BigInt) {
-  def update(value: BigInt, previousValue: BigInt): ActivityFactor = {
-    if (value != previousValue) {
-      ActivityFactor(transitionCount + 1)
-    } else {
-      ActivityFactor(transitionCount)
-    }
-  }
-}
-
-class ActivityFactorCollector {
-  val activity = new mutable.HashMap[String, ActivityFactor]
-  def getPlugin(executionEngine: ExecutionEngine): DataStorePlugin = {
-    PlugIn(executionEngine)
-  }
-
-  case class PlugIn(executionEngine: ExecutionEngine) extends DataStorePlugin {
-    override def dataStore: DataStore = executionEngine.dataStore
-
-    override def run(symbol: Symbol, offset: Int, previousValue: Big): Unit = {
-      activity(symbol.name) = activity.get(symbol.name) match {
-        case Some(activity) => activity.update(dataStore(symbol), previousValue)
-        case None           => ActivityFactor(1)
-      }
-    }
-  }
-}
