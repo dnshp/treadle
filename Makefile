@@ -51,4 +51,8 @@ clean:	mill.clean
 
 build:	mill.build
 
-.PHONY: build clean mill.build mill.test mill.publishLocal mill.build.all mill.test.all mill.publishLocal.all
+# Custom recipes for Activity Factor tester
+ActivityFactorSpec:
+	sbt "testOnly treadle.executable.$@"
+
+.PHONY: build clean mill.build mill.test mill.publishLocal mill.build.all mill.test.all mill.publishLocal.all ActivityFactorSpec

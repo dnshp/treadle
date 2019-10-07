@@ -48,8 +48,7 @@ class ActivityFactorSpec extends FreeSpec with Matchers {
       tester.finish
 
       activityFactorCollector.signals("r").transitionCount should be (BigInt(17))
-      print("Activity factor for signal r is ")
-      println(activityFactorCollector.signals("r").activityFactor)
+      activityFactorCollector.report(tester.engine)
     }
   }
 }

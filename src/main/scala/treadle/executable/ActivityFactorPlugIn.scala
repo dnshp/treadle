@@ -36,6 +36,12 @@ class ActivityFactorCollector {
     PlugIn(executionEngine)
   }
 
+  def report(executionEngine: ExecutionEngine) {
+    for ((name, collector) <- signals) {
+      if (executionEngine.isRegister(name)) printf("Activity factor of signal %s is %f\n", name, collector.activityFactor)
+    }
+  }
+
   case class PlugIn(executionEngine: ExecutionEngine) extends DataStorePlugin {
     override def dataStore: DataStore = executionEngine.dataStore
 
