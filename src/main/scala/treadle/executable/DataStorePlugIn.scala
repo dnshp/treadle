@@ -69,9 +69,10 @@ class RenderComputations(
 ) extends DataStorePlugin {
 
   val dataStore: DataStore = executionEngine.dataStore
-  val symbolsToWatch: Set[Symbol] = symbolNamesToWatch.flatMap { name =>
+  val symbolsToWatch: mutable.HashSet[Symbol] = new mutable.HashSet
+  symbolsToWatch ++= symbolNamesToWatch.flatMap { name =>
     executionEngine.symbolTable.get(name)
-  }.toSet
+  }
 
   def run(symbol: Symbol, offset: Int = -1, previousValue: BigInt): Unit = {
     if(symbolsToWatch.contains(symbol)) {

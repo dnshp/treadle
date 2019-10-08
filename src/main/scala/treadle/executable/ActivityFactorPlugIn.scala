@@ -38,7 +38,7 @@ class ActivityFactorCollector {
 
   def report(executionEngine: ExecutionEngine) {
     for ((name, collector) <- signals) {
-      if (executionEngine.isRegister(name)) printf("Activity factor of signal %s is %f\n", name, collector.activityFactor)
+      if (executionEngine.isRegister(name)) printf("Activity factor of register %s is %f\n", name, collector.activityFactor)
     }
   }
 

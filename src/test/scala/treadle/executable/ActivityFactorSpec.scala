@@ -40,14 +40,16 @@ class ActivityFactorSpec extends FreeSpec with Matchers {
       )
       val tester = TreadleTester(annos :+ FirrtlSourceAnnotation(input))
 
+      val expectedTransitionCount = Seq(0, 2, 3, 6, 7, 9, 10, 14, 15, 17)
+
       for (a <- 1 to 10) {
         tester.poke("a", a)
         tester.poke("b", a)
         tester.step()
+        activityFactorCollector.signals("r").transitionCount should be (BigInt(expectedTransitionCount(a - 1)))
       }
       tester.finish
 
-      activityFactorCollector.signals("r").transitionCount should be (BigInt(17))
       activityFactorCollector.report(tester.engine)
     }
   }
