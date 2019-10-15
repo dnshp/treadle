@@ -39,6 +39,10 @@ crossScalaVersions := Seq("2.12.7", "2.11.12")
 // enables using control-c in sbt CLI
 cancelable in Global := true
 
+lazy val area_transforms = (project in file("area-transforms/chisel/reporters"))
+
+lazy val root = (project in file(".")).dependsOn(area_transforms)
+
 resolvers ++= Seq(
   Resolver.sonatypeRepo("snapshots"),
   Resolver.sonatypeRepo("releases"),

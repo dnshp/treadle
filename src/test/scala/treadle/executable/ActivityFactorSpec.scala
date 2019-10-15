@@ -11,6 +11,8 @@ import treadle.{
 }
 
 import scala.collection.mutable
+import reporters.{ReportArea, AreaAnnotation}
+import firrtl._
 
 class ActivityFactorSpec extends FreeSpec with Matchers {
 

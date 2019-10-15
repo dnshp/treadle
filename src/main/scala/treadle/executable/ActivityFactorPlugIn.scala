@@ -3,6 +3,7 @@
 package treadle.executable
 
 import scala.collection.mutable
+import reporters._
 
 case class ActivityFactor(transitionCount: BigInt, clockCount: BigInt) {
   def update(value: BigInt, previousValue: BigInt, bits: BigInt): ActivityFactor = {
@@ -37,6 +38,7 @@ class ActivityFactorCollector {
   }
 
   def report(executionEngine: ExecutionEngine) {
+    (new ReportArea).execute(executionEngine.ast)
     for ((name, collector) <- signals) {
       if (executionEngine.isRegister(name)) printf("Activity factor of register %s is %f\n", name, collector.activityFactor)
     }

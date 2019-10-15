@@ -1,0 +1,3 @@
+[submodule "area-transforms"]
+	path = area-transforms
+	url = git@github.com:dnshp/rapid-design-methods-for-developing-hardware-accelerators.git
