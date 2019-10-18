@@ -38,9 +38,13 @@ class ActivityFactorCollector {
   }
 
   def report(executionEngine: ExecutionEngine) {
-    (new ReportArea).execute(executionEngine.ast)
+    val reporter = new ReportArea
+    val opMap = reporter.moduleOpInputsMap(executionEngine.ast)
     for ((name, collector) <- signals) {
-      if (executionEngine.isRegister(name)) printf("Activity factor of register %s is %f\n", name, collector.activityFactor)
+      println(s"Activity factor of signal ${name} is ${collector.activityFactor}")
+      val powerAnno = opMap("PassThrough").find(_.name == name)
+      if (powerAnno == None) println(s"Signal ${name} not found in ledger!")
+      else println(s"Signal ${name} has type ${powerAnno.get.tpe} and is connected to a ${powerAnno.get.opType} op.")
     }
   }
 
