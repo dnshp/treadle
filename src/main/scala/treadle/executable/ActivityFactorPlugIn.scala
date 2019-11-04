@@ -41,11 +41,17 @@ class ActivityFactorCollector {
     val reporter = new ReportArea
     val opMap = reporter.moduleOpInputsMap(executionEngine.ast)
     for ((name, collector) <- signals) {
-      println(s"Activity factor of signal ${name} is ${collector.activityFactor}")
-      val powerAnno = opMap("PassThrough").find(_.name == name)
-      if (powerAnno == None) println(s"Signal ${name} not found in ledger!")
-      else println(s"Signal ${name} has type ${powerAnno.get.tpe} and is connected to a ${powerAnno.get.opType} op.")
+      println(s"Signal ${name} has power ${calcPower(name, collector, opMap, "PassThrough")}")
     }
+  }
+
+  def calcPower(name : String, collector : ActivityFactor, opMap : mutable.Map[String,mutable.ListBuffer[PowerAnnotation]], moduleName : String): Float = {
+    val powerAnno = opMap(moduleName).find(_.name == name)
+    if (powerAnno == None) {
+      println(s"Signal ${name} not found in ledger!")
+      0
+    }
+    else ComputePower(powerAnno.get, collector.activityFactor)
   }
 
   case class PlugIn(executionEngine: ExecutionEngine) extends DataStorePlugin {
