@@ -5,13 +5,9 @@ package treadle.executable
 import scala.collection.mutable
 import reporters._
 
-case class ActivityFactor(transitionCount: BigInt, clockCount: BigInt) {
+case class ActivityFactor(transitionCount: BigInt, clockCount: BigInt, lastVal: BigInt) {
   def update(value: BigInt, previousValue: BigInt, bits: BigInt): ActivityFactor = {
-    if (value != previousValue) {
-      ActivityFactor(transitionCount + bitDiff(value.toInt, previousValue.toInt, bits.toInt), clockCount + 1)
-    } else {
-      ActivityFactor(transitionCount, clockCount + 1)
-    }
+    ActivityFactor(transitionCount + bitDiff(value.toInt, lastVal.toInt, bits.toInt), clockCount + 1, value)
   }
 
   def bitDiff(a: Int, b: Int, bits: Int): Int = {
@@ -58,9 +54,11 @@ class ActivityFactorCollector {
     override def dataStore: DataStore = executionEngine.dataStore
 
     override def run(symbol: Symbol, offset: Int, previousValue: Big): Unit = {
-      signals(symbol.name) = signals.get(symbol.name) match {
-        case Some(activity) => activity.update(dataStore(symbol), previousValue, symbol.bitWidth)
-        case None           => ActivityFactor(0, 1) // Initialize on the first cycle
+      if ((executionEngine.getValue("clock/prev") == 0) && (executionEngine.getValue("clock") == 1)) {
+        signals(symbol.name) = signals.get(symbol.name) match {
+          case Some(activity) => activity.update(dataStore(symbol), previousValue, symbol.bitWidth)
+          case None           => ActivityFactor(0, 1, dataStore(symbol)) // Initialize on the first cycle
+        }
       }
     }
   }
